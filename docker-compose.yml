@@ -1,0 +1,41 @@
+# Quick start: hub + TimescaleDB in one command.
+#   docker compose up -d
+#   docker compose logs hub        # copy the bootstrap access token
+#   open http://localhost:8787
+#
+# Change POSTGRES_PASSWORD before exposing this anywhere.
+# Already have Postgres? Skip this file and run the hub with `npm start` (see README).
+services:
+  db:
+    image: timescale/timescaledb:latest-pg17
+    environment:
+      POSTGRES_USER: nodemon
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nodemon-change-me}
+      POSTGRES_DB: nodemon
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nodemon -d nodemon"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  hub:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://nodemon:${POSTGRES_PASSWORD:-nodemon-change-me}@db:5432/nodemon
+      # Address your servers use to reach this hub (LAN IP or Tailscale name).
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      SESSION_DAYS: ${SESSION_DAYS:-7}
+      RETENTION_DAYS: ${RETENTION_DAYS:-30}
+      ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL:-}
+    ports:
+      - "${HUB_PORT:-8787}:8787"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

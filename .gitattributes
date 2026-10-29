@@ -1,0 +1,4 @@
+# Agents are served to Linux hosts: shell scripts must stay LF on every checkout.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.png binary

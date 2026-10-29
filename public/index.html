@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Node Monitor</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/app.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Login: shown when there is no valid session -->
+  <section id="login" class="login" hidden aria-labelledby="login-title">
+    <form id="login-form" class="login-card" autocomplete="off">
+      <div class="brand"><span class="brand-dot" aria-hidden="true"></span> Node Monitor</div>
+      <h1 id="login-title">Sign in</h1>
+      <p class="muted">Enter an access token. Each session lasts <span id="login-days">7</span> days. After that you enter the token again.</p>
+      <label for="login-token">Access token</label>
+      <input id="login-token" name="token" type="password" placeholder="nmui_…" required spellcheck="false" autocapitalize="off">
+      <p id="login-error" class="field-error" role="alert"></p>
+      <button class="btn primary" type="submit">Sign in</button>
+      <p class="muted small">Lost every token? On the hub run <code>npm run token -- create "name"</code>.</p>
+    </form>
+  </section>
+
+  <!-- App shell -->
+  <div id="app" class="shell" hidden>
+    <header class="topbar">
+      <a class="brand" href="#/"><span class="brand-dot" aria-hidden="true"></span> Node Monitor</a>
+      <nav aria-label="Main">
+        <a href="#/" data-nav="fleet">Fleet</a>
+        <a href="#/alerts" data-nav="alerts">Alerts <span id="alert-badge" class="badge" hidden></span></a>
+        <a href="#/settings" data-nav="settings">Settings</a>
+      </nav>
+      <div class="topbar-right">
+        <span id="live" class="live" title="Live connection"><span class="live-dot" aria-hidden="true"></span><span id="live-text">Connecting</span></span>
+        <span id="session-left" class="muted small"></span>
+        <button id="logout" class="btn ghost small" type="button">Sign out</button>
+      </div>
+    </header>
+    <main id="main" tabindex="-1"></main>
+  </div>
+
+  <dialog id="dialog" aria-labelledby="dialog-title">
+    <form method="dialog" class="dialog-body" id="dialog-form">
+      <h2 id="dialog-title"></h2>
+      <div id="dialog-content"></div>
+      <div class="dialog-actions" id="dialog-actions"></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
